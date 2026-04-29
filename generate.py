@@ -1,14 +1,18 @@
 import torch
 from diffusers import StableDiffusionPipeline
 
-# Load model (using a standard one as a base)
-pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_dtype=torch.float16)
+# Load the realistic model from your Google Drive path later
+pipe = StableDiffusionPipeline.from_single_file(
+    "/content/drive/MyDrive/AI_Models/realistic_vision_v6.0.safetensors", 
+    torch_dtype=torch.float16
+)
 pipe = pipe.to("cuda")
 
-# THE UNRESTRICTED STEP: Disable the built-in safety filters
+# UNRESTRICTED: Disable safety checker
 pipe.safety_checker = None
 pipe.requires_safety_checker = False
 
-prompt = "Your unrestricted prompt here"
-image = pipe(prompt).images[0]
+# Recommended Realistic Vision prompt template
+prompt = "RAW photo, a person standing in a park, 8k uhd, dslr, soft lighting, high quality, film grain"
+image = pipe(prompt).images
 image.save("output.png")
